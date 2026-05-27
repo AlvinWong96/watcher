@@ -11,15 +11,17 @@
 ## URL
 `http://localhost:8080/watcher/`
 
-## Tabs
-| Tab ID | Content |
+## Navigation
+Left sidebar with 5 items + Chat link at the bottom. Default landing is the Home panel.
+
+| Nav ID | Content |
 |---|---|
+| `home` | Welcome page with 4 quick-access cards |
 | `world-news` | BBC World + Sky News RSS, AI summaries |
 | `malaysia-news` | Malay Mail + FMT RSS, AI summaries |
-| `world-economy` | BBC Business + MarketWatch RSS, AI summaries |
-| `malaysia-economy` | The Star Business + The Edge Markets RSS, AI summaries |
-| Stocks (world-economy panel) | Yahoo Finance charts + ML predictions |
-| Chat | `/watcher/chat.html` — multi-turn Ollama chat |
+| `world-economy` | BBC Business + MarketWatch RSS, AI summaries + stock charts |
+| `malaysia-economy` | The Star Business + The Edge Markets RSS, AI summaries + stock charts |
+| Chat | `/watcher/chat.html` — multi-turn Ollama chat (sidebar footer link) |
 
 ## News Pipeline
 ```
@@ -31,19 +33,19 @@ All colours use CSS custom properties defined in `css/style.css` `:root`:
 - `--bg` `--bg2` `--bg3` `--bg4` — background shades
 - `--border` `--border2` — borders
 - `--text` `--text2` `--text3` — text shades
-- `--accent: #3b82f6` — blue highlight
+- `--accent: #38bdf8` — sky-blue highlight
 - `--radius: 10px`
 
 ## Key Files
 | File | Purpose |
 |---|---|
-| `index.html` | 4-tab shell, auto-refresh button |
+| `index.html` | Sidebar shell: Home panel + 4 content panels, auto-refresh button |
 | `chat.html` | Standalone Ollama chat UI |
 | `api/news.php` | SSE news stream — see `.docs/news-php.md` |
 | `api/chat.php` | POST proxy to Ollama `/v1/chat/completions` |
 | `api/stocks.php` | Yahoo Finance proxy + predictor calls |
-| `js/app.js` | Tab switching, lazy load, auto-refresh (5 min) |
-| `js/news.js` | EventSource consumer, card render, pagination — see `.docs/news-js.md` |
+| `js/app.js` | Sidebar navigation (`activateTab()`), lazy load, auto-refresh (5 min) |
+| `js/news.js` | EventSource consumer, card render, pagination, stop-AI button — see `.docs/news-js.md` |
 | `js/stocks.js` | Chart.js stock charts + ML predictions |
 | `css/style.css` | Dark theme stylesheet |
 

@@ -20,6 +20,17 @@ Uses `EventSource` (not `fetch`). The PHP endpoint streams SSE events; JS render
 - Spinner stays visible until `done` event fires.
 - New article cards insert **before** the spinner (`spinnerEl.insertAdjacentHTML('beforebegin', html)`).
 - On `done`: `container.querySelector('.loading-state')?.remove()`.
+- The loading state also contains a hidden **⏹ Stop AI** button (see below).
+
+## Stop AI Button
+- Rendered inside `.loading-state` as `<button class="stop-ai-btn" style="display:none">`.
+- Becomes visible after the `meta` SSE event when `ai_attempted === true`.
+- On click:
+  1. Closes the `EventSource` (`source.close()`).
+  2. Removes the loading spinner.
+  3. If `articleBuffer` is non-empty: calls `renderCurrentPage()` and appends a `.stop-notice` bar.
+  4. If buffer is empty: calls `renderError()` with a "stopped" message.
+- PHP continues running in the background (`ignore_user_abort(true)`) to finish writing the cache — the next load of that tab will be instant and fully summarised.
 
 ## Pagination Flow
 1. All articles are stored in `articleBuffer` regardless of page.

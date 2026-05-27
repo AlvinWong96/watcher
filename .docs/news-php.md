@@ -26,7 +26,8 @@ event: done     {count, ai_attempted, errors[], fetched, cached}
 ## Key Settings
 | Setting | Value | Where to change |
 |---|---|---|
-| Total articles fetched | 25 | `array_slice($allArticles, 0, 25)` |
+| Articles per feed | 20 | `if (count($articles) >= 20) break;` inside `parseRss()` |
+| Total articles fetched | 20 | `array_slice($allArticles, 0, 20)` |
 | AI timeout per article | 90s | `summarizeOne(..., 90)` call |
 | Summary length | 5 sentences | prompt string in `summarizeOne()` |
 | max_tokens | 350 | payload in `summarizeOne()` |
