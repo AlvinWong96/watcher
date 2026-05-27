@@ -48,6 +48,7 @@ const WatcherNews = (() => {
       <div class="loading-state">
         <div class="spinner"></div>
         <span>Loading articles…</span>
+        <button class="stop-ai-btn" style="display:none" title="Stop AI processing">⏹ Stop AI</button>
       </div>`;
   }
 
@@ -199,9 +200,28 @@ const WatcherNews = (() => {
     const source = new EventSource(`api/news.php?tab=${encodeURIComponent(tabId)}`);
     activeSources[tabId] = source;
 
+    // Wire stop button — closes the SSE stream; PHP continues in background to fill cache
+    container.querySelector('.stop-ai-btn')?.addEventListener('click', () => {
+      source.close();
+      delete activeSources[tabId];
+      container.querySelector('.loading-state')?.remove();
+      if (articleBuffer.length === 0) {
+        container.innerHTML = '';
+        renderError(container, 'AI processing stopped before any articles arrived.', tabId);
+      } else {
+        renderCurrentPage();
+        container.insertAdjacentHTML('beforeend',
+          `<div class="stop-notice">⏹ AI stopped · ${articleBuffer.length} article${articleBuffer.length !== 1 ? 's' : ''} loaded</div>`);
+      }
+    });
+
     source.addEventListener('meta', e => {
       const d = JSON.parse(e.data);
       aiAttempted = d.ai_attempted === true;
+      if (aiAttempted) {
+        const stopBtn = container.querySelector('.stop-ai-btn');
+        if (stopBtn) stopBtn.style.display = '';
+      }
     });
 
     source.addEventListener('status', e => {

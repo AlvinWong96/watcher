@@ -20,10 +20,6 @@
       <span class="brand-name">Watcher</span>
     </div>
     <div class="header-right">
-      <a href="chat.html" class="chat-link" title="Chat with Ollama">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        Chat
-      </a>
       <button class="auto-refresh-btn" id="js-auto-refresh" title="Toggle auto-refresh every 5 minutes" aria-pressed="false">
         <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="23 4 23 10 17 10"/>
@@ -35,31 +31,78 @@
     </div>
   </header>
 
-  <!-- ── Tab Bar ────────────────────────────────────────────────────────── -->
-  <nav class="tab-bar" role="tablist">
-    <button class="tab-btn active" role="tab" data-tab="world-news" aria-selected="true">
-      <span class="tab-icon">🌍</span>
-      <span class="tab-label">World News</span>
-    </button>
-    <button class="tab-btn" role="tab" data-tab="malaysia-news" aria-selected="false">
-      <span class="tab-icon">🇲🇾</span>
-      <span class="tab-label">Malaysia News</span>
-    </button>
-    <button class="tab-btn" role="tab" data-tab="world-economy" aria-selected="false">
-      <span class="tab-icon">📈</span>
-      <span class="tab-label">World Markets</span>
-    </button>
-    <button class="tab-btn" role="tab" data-tab="malaysia-economy" aria-selected="false">
-      <span class="tab-icon">💹</span>
-      <span class="tab-label">Malaysia Markets</span>
-    </button>
-  </nav>
+  <!-- ── App Layout ─────────────────────────────────────────────────────── -->
+  <div class="app-layout">
+
+    <!-- ── Sidebar ────────────────────────────────────────────────────── -->
+    <nav class="sidebar" role="navigation" aria-label="Main navigation">
+      <div class="sidebar-nav">
+        <button class="nav-item active" data-tab="home" aria-selected="true">
+          <span class="nav-icon">🏠</span>
+          <span class="nav-label">Home</span>
+        </button>
+        <button class="nav-item" data-tab="world-news" aria-selected="false">
+          <span class="nav-icon">🌍</span>
+          <span class="nav-label">World News</span>
+        </button>
+        <button class="nav-item" data-tab="malaysia-news" aria-selected="false">
+          <span class="nav-icon">🇲🇾</span>
+          <span class="nav-label">Malaysia News</span>
+        </button>
+        <button class="nav-item" data-tab="world-economy" aria-selected="false">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">World Markets</span>
+        </button>
+        <button class="nav-item" data-tab="malaysia-economy" aria-selected="false">
+          <span class="nav-icon">💹</span>
+          <span class="nav-label">Malaysia Markets</span>
+        </button>
+      </div>
+      <div class="sidebar-footer">
+        <a href="chat.html" class="nav-item" title="Chat with Ollama">
+          <span class="nav-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </span>
+          <span class="nav-label">Chat</span>
+        </a>
+      </div>
+    </nav>
 
   <!-- ── Main Content ───────────────────────────────────────────────────── -->
   <main class="app-main">
 
+    <!-- Home -->
+    <section class="tab-panel active" id="panel-home" role="tabpanel">
+      <div class="home-hero">
+        <h1 class="home-title">Welcome to <span class="home-accent">Watcher</span></h1>
+        <p class="home-sub">Your real-time hub for global &amp; Malaysian news and market data</p>
+      </div>
+      <div class="home-grid">
+        <button class="home-card" data-tab="world-news">
+          <span class="home-card-icon">🌍</span>
+          <h3>World News</h3>
+          <p>Live headlines from BBC World &amp; Sky News</p>
+        </button>
+        <button class="home-card" data-tab="malaysia-news">
+          <span class="home-card-icon">🇲🇾</span>
+          <h3>Malaysia News</h3>
+          <p>Live headlines from Malay Mail &amp; FMT</p>
+        </button>
+        <button class="home-card" data-tab="world-economy">
+          <span class="home-card-icon">📈</span>
+          <h3>World Markets</h3>
+          <p>Price history &amp; AI-assisted trend prediction for global stocks</p>
+        </button>
+        <button class="home-card" data-tab="malaysia-economy">
+          <span class="home-card-icon">💹</span>
+          <h3>Malaysia Markets</h3>
+          <p>Bursa Malaysia price history &amp; AI trend prediction</p>
+        </button>
+      </div>
+    </section>
+
     <!-- World News -->
-    <section class="tab-panel active" id="panel-world-news" role="tabpanel">
+    <section class="tab-panel" id="panel-world-news" role="tabpanel">
       <div class="panel-header">
         <h2>World News</h2>
         <p class="panel-sub">Live headlines from BBC World &amp; Sky News</p>
@@ -196,6 +239,8 @@
     </section>
 
   </main>
+
+  </div><!-- /.app-layout -->
 
   <!-- Scripts -->
   <script src="js/news.js"></script>

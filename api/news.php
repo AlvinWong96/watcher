@@ -248,7 +248,7 @@ function parseRss(string $xml, string $source): array
             'source' => $source,
         ];
 
-        if (count($articles) >= 15) break;
+        if (count($articles) >= 20) break;
     }
 
     return $articles;
@@ -448,7 +448,7 @@ foreach (FEEDS[$tab] as $feed) {
 }
 
 usort($allArticles, fn($a, $b) => $b['ts'] - $a['ts']);
-$allArticles = array_slice($allArticles, 0, 2); // change this number to control total articles fetched
+$allArticles = array_slice($allArticles, 0, 20); // change this number to control total articles fetched
 
 // ── Step 2: Enrich articles with full page content ─────────────────────────
 sse('status', ['message' => 'Loading article content…']);

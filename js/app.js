@@ -10,27 +10,36 @@
   const loaded = new Set();
 
   // ── Tab Switching ──────────────────────────────────────────────────────
-  function initTabs() {
-    const tabBtns   = document.querySelectorAll('.tab-btn');
+  function activateTab(tabId) {
+    const navItems  = document.querySelectorAll('.nav-item[data-tab]');
     const tabPanels = document.querySelectorAll('.tab-panel');
 
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const tabId = btn.dataset.tab;
+    navItems.forEach(b => {
+      b.classList.remove('active');
+      b.setAttribute('aria-selected', 'false');
+    });
+    tabPanels.forEach(p => p.classList.remove('active'));
 
-        tabBtns.forEach(b => {
-          b.classList.remove('active');
-          b.setAttribute('aria-selected', 'false');
-        });
-        tabPanels.forEach(p => p.classList.remove('active'));
+    const activeBtn = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+    if (activeBtn) {
+      activeBtn.classList.add('active');
+      activeBtn.setAttribute('aria-selected', 'true');
+    }
+    const panel = document.getElementById(`panel-${tabId}`);
+    if (panel) panel.classList.add('active');
 
-        btn.classList.add('active');
-        btn.setAttribute('aria-selected', 'true');
-        document.getElementById(`panel-${tabId}`).classList.add('active');
+    // Lazy-load content
+    loadTab(tabId);
+  }
 
-        // Lazy-load content
-        loadTab(tabId);
-      });
+  function initTabs() {
+    document.querySelectorAll('.nav-item[data-tab]').forEach(btn => {
+      btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+    });
+
+    // Home-card shortcut buttons
+    document.querySelectorAll('.home-card[data-tab]').forEach(card => {
+      card.addEventListener('click', () => activateTab(card.dataset.tab));
     });
   }
 
@@ -40,6 +49,8 @@
     loaded.add(tabId);
 
     switch (tabId) {
+      case 'home':
+        break; // nothing to load
       case 'world-news':
       case 'malaysia-news':
         WatcherNews.load(tabId);
@@ -65,8 +76,8 @@
   let   autoRefreshTimer = null;
 
   function getActiveTabId() {
-    const btn = document.querySelector('.tab-btn.active');
-    return btn ? btn.dataset.tab : 'world-news';
+    const btn = document.querySelector('.nav-item[data-tab].active');
+    return btn ? btn.dataset.tab : 'home';
   }
 
   function refreshActiveTab() {
@@ -114,8 +125,7 @@
     initTabs();
     setUpdatedTime();
     initAutoRefreshBtn();
-    // Load the default active tab (World News)
-    loadTab('world-news');
+    // Home is the default active tab — no content to load
   });
 
 })();
