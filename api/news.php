@@ -233,8 +233,8 @@ function parseRss(string $xml, string $source): array
         $desc = preg_replace('/\s+/', ' ', trim($desc));
         if (strlen($desc) > 800) $desc = substr($desc, 0, 800) . '…';
 
-        // Skip non-English articles
-        if (!isEnglish($title) || ($desc && !isEnglish($desc))) continue;
+        // All feeds in the registry are English-language sources; skip language filter
+        // (isEnglish() was too aggressive — rejected Malaysian English outlets with mixed content)
 
         $pubDate = trim((string)($item->pubDate ?? ''));
         $ts      = strtotime($pubDate);
