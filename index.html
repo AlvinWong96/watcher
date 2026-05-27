@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Watcher — News &amp; Markets</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="app-header">
+    <div class="header-brand">
+      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"/>
+        <polyline points="12 6 12 12 16 14"/>
+      </svg>
+      <span class="brand-name">Watcher</span>
+    </div>
+    <div class="header-right">
+      <a href="chat.html" class="chat-link" title="Chat with Ollama">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Chat
+      </a>
+      <button class="auto-refresh-btn" id="js-auto-refresh" title="Toggle auto-refresh every 5 minutes" aria-pressed="false">
+        <svg class="refresh-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="23 4 23 10 17 10"/>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+        </svg>
+        <span class="refresh-label">Auto</span>
+      </button>
+      <span class="update-badge" id="js-last-updated"></span>
+    </div>
+  </header>
+
+  <!-- ── Tab Bar ────────────────────────────────────────────────────────── -->
+  <nav class="tab-bar" role="tablist">
+    <button class="tab-btn active" role="tab" data-tab="world-news" aria-selected="true">
+      <span class="tab-icon">🌍</span>
+      <span class="tab-label">World News</span>
+    </button>
+    <button class="tab-btn" role="tab" data-tab="malaysia-news" aria-selected="false">
+      <span class="tab-icon">🇲🇾</span>
+      <span class="tab-label">Malaysia News</span>
+    </button>
+    <button class="tab-btn" role="tab" data-tab="world-economy" aria-selected="false">
+      <span class="tab-icon">📈</span>
+      <span class="tab-label">World Markets</span>
+    </button>
+    <button class="tab-btn" role="tab" data-tab="malaysia-economy" aria-selected="false">
+      <span class="tab-icon">💹</span>
+      <span class="tab-label">Malaysia Markets</span>
+    </button>
+  </nav>
+
+  <!-- ── Main Content ───────────────────────────────────────────────────── -->
+  <main class="app-main">
+
+    <!-- World News -->
+    <section class="tab-panel active" id="panel-world-news" role="tabpanel">
+      <div class="panel-header">
+        <h2>World News</h2>
+        <p class="panel-sub">Live headlines from BBC World &amp; Sky News</p>
+      </div>
+      <div class="news-grid" id="world-news-list"></div>
+    </section>
+
+    <!-- Malaysia News -->
+    <section class="tab-panel" id="panel-malaysia-news" role="tabpanel">
+      <div class="panel-header">
+        <h2>Malaysia News</h2>
+        <p class="panel-sub">Live headlines from Malay Mail &amp; FMT</p>
+      </div>
+      <div class="news-grid" id="malaysia-news-list"></div>
+    </section>
+
+    <!-- World Economy & Stocks -->
+    <section class="tab-panel" id="panel-world-economy" role="tabpanel">
+
+      <!-- Stock Dashboard -->
+      <div class="stock-dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <h2>World Markets</h2>
+            <p class="panel-sub">Price history &amp; AI-assisted trend prediction</p>
+          </div>
+          <div class="stock-controls">
+            <select class="stock-select" id="world-stock-select" aria-label="Select stock"></select>
+            <div class="range-group" id="world-range-group">
+              <button class="range-btn active" data-range="1mo">1M</button>
+              <button class="range-btn" data-range="3mo">3M</button>
+              <button class="range-btn" data-range="6mo">6M</button>
+              <button class="range-btn" data-range="1y">1Y</button>
+              <button class="range-btn" data-range="2y">2Y</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats row -->
+        <div class="stats-row" id="world-stock-stats">
+          <div class="stat-skeleton"></div>
+          <div class="stat-skeleton"></div>
+          <div class="stat-skeleton"></div>
+          <div class="stat-skeleton"></div>
+        </div>
+
+        <!-- Main chart -->
+        <div class="chart-container">
+          <div class="chart-legend" id="world-chart-legend"></div>
+          <div class="chart-wrap">
+            <canvas id="world-stock-chart"></canvas>
+          </div>
+          <div class="chart-overlay" id="world-chart-overlay">
+            <div class="spinner"></div><span>Loading chart…</span>
+          </div>
+        </div>
+
+        <!-- Prediction table -->
+        <div class="prediction-section">
+          <h3 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h2l4-8 4 16 4-8 2 0"/></svg>
+            7-Day Price Prediction
+            <span class="prediction-badge">Linear Regression</span>
+          </h3>
+          <div id="world-prediction-table"></div>
+          <p class="disclaimer">⚠ Predictions are based on linear regression trend analysis and are for informational purposes only. Not financial advice.</p>
+        </div>
+      </div>
+
+      <!-- Market News -->
+      <div class="panel-header" style="margin-top:2rem">
+        <h2>Market News</h2>
+        <p class="panel-sub">Latest from BBC Business &amp; MarketWatch</p>
+      </div>
+      <div class="news-grid" id="world-economy-list"></div>
+    </section>
+
+    <!-- Malaysia Economy & Stocks -->
+    <section class="tab-panel" id="panel-malaysia-economy" role="tabpanel">
+
+      <!-- Stock Dashboard -->
+      <div class="stock-dashboard">
+        <div class="dashboard-header">
+          <div class="dashboard-title">
+            <h2>Malaysia Markets</h2>
+            <p class="panel-sub">Bursa Malaysia price history &amp; trend prediction</p>
+          </div>
+          <div class="stock-controls">
+            <select class="stock-select" id="malaysia-stock-select" aria-label="Select stock"></select>
+            <div class="range-group" id="malaysia-range-group">
+              <button class="range-btn active" data-range="1mo">1M</button>
+              <button class="range-btn" data-range="3mo">3M</button>
+              <button class="range-btn" data-range="6mo">6M</button>
+              <button class="range-btn" data-range="1y">1Y</button>
+              <button class="range-btn" data-range="2y">2Y</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats-row" id="malaysia-stock-stats">
+          <div class="stat-skeleton"></div>
+          <div class="stat-skeleton"></div>
+          <div class="stat-skeleton"></div>
+          <div class="stat-skeleton"></div>
+        </div>
+
+        <div class="chart-container">
+          <div class="chart-legend" id="malaysia-chart-legend"></div>
+          <div class="chart-wrap">
+            <canvas id="malaysia-stock-chart"></canvas>
+          </div>
+          <div class="chart-overlay" id="malaysia-chart-overlay">
+            <div class="spinner"></div><span>Loading chart…</span>
+          </div>
+        </div>
+
+        <div class="prediction-section">
+          <h3 class="section-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h2l4-8 4 16 4-8 2 0"/></svg>
+            7-Day Price Prediction
+            <span class="prediction-badge">Linear Regression</span>
+          </h3>
+          <div id="malaysia-prediction-table"></div>
+          <p class="disclaimer">⚠ Predictions are based on linear regression trend analysis and are for informational purposes only. Not financial advice.</p>
+        </div>
+      </div>
+
+      <!-- Market News -->
+      <div class="panel-header" style="margin-top:2rem">
+        <h2>Market News</h2>
+        <p class="panel-sub">Latest from The Star Business &amp; The Edge Markets</p>
+      </div>
+      <div class="news-grid" id="malaysia-economy-list"></div>
+    </section>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="js/news.js"></script>
+  <script src="js/stocks.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
